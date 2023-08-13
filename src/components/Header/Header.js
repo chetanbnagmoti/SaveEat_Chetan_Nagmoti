@@ -35,6 +35,10 @@ const navigationData = [
   {
     label: "Settings",
     value: "/setting",
+    subSettinngs:[
+      {label:"Setting-1",value:"/Setting-1"},
+      {label:"Setting-2",value:"/Setting-2"},
+    ]
   },
   {
     label: "Help",
@@ -62,6 +66,7 @@ export default function Header() {
   };
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [settingMenuAnchor, setSettingMenuAnchor] = useState(null);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -70,7 +75,15 @@ export default function Header() {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+  
+  const handleSettingMenuOpen=(event)=>{
+    setSettingMenuAnchor(event.currentTarget);
+  }
 
+  const handleSettingMenuClose=()=>{
+    setSettingMenuAnchor(null);
+
+  }
   return (
     <Box
       sx={{
@@ -178,12 +191,21 @@ export default function Header() {
                 alignItems: "center",
               }}
             >
-              {navigationData.map(({ label, value, subMenus }) => (
+              {navigationData.map(({ label, value, subMenus,subSettinngs}) => (
                 <Box key={label}>
                   {subMenus ? (
                     <Button
                       sx={{ color: "#fff", margin: "1rem", cursor: "pointer" }}
-                      onClick={handleMenuOpen}
+                      onClick={handleMenuOpen} 
+                    >
+                      <Typography color="black" fontWeight="600">
+                        {label}
+                      </Typography>
+                    </Button>
+                  ) : subSettinngs ? (
+                    <Button
+                      sx={{ color: "#fff", margin: "1rem", cursor: "pointer" }}
+                      onClick={handleSettingMenuOpen}
                     >
                       <Typography color="black" fontWeight="600">
                         {label}
@@ -199,7 +221,7 @@ export default function Header() {
                       </Typography>
                     </Button>
                   )}
-
+                  
                   {subMenus && (
                     <Menu
                       sx={{ borderRadius: "8px" }}
@@ -245,7 +267,53 @@ export default function Header() {
                       ))}
                     </Menu>
                   )}
+                  {subSettinngs && (
+                    <Menu
+                      sx={{ borderRadius: "8px" }}
+                      anchorEl={settingMenuAnchor}
+                      open={Boolean(settingMenuAnchor)}
+                      onClose={handleSettingMenuClose}
+                      PaperProps={{
+                        elevation: 0,
+                        sx: {
+                          overflow: "visible",
+                          filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                          mt: 1.5,
+                          "& .MuiAvatar-root": {
+                            width: 32,
+                            height: 32,
+                            ml: -0.5,
+                            mr: 1,
+                          },
+                          "&:before": {
+                            content: '""',
+                            display: "block",
+                            position: "absolute",
+                            top: 0,
+                            right: 14,
+                            width: 10,
+                            height: 10,
+                            bgcolor: "background.paper",
+                            transform: "translateY(-50%) rotate(45deg)",
+                            zIndex: 0,
+                          },
+                        },
+                      }}
+                      transformOrigin={{ horizontal: "right", vertical: "top" }}
+                      anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                    >
+                      {subSettinngs.map((subItem) => (
+                        <MenuItem
+                          key={subItem.label}
+                          onClick={() => navigate(subItem.value)}
+                        >
+                          {subItem.label}
+                        </MenuItem>
+                      ))}
+                    </Menu>
+                  )}
                 </Box>
+                
               ))}
             </Box>
 
